@@ -4,14 +4,20 @@ namespace higherLower
 {
   class Program
   {
-    static void StartGame()
+    static void StartGame(bool firstGame)
     {
-      Console.WriteLine("Would you like to play the higher/lower game? (yes/no)");
+      if (firstGame)
+      {
+        Console.WriteLine("Would you like to play the higher/lower game? (yes/no)");
+      }
+      else
+      {
+        Console.WriteLine("Wanna play again? (yes/no)");
+      }
       string userStart = Console.ReadLine();
       if (userStart == "yes")
       {
-        Player player = new Player();
-        Gameplay(player);
+        SelectMode();
       }
       else if (userStart == "no")
       {
@@ -21,7 +27,29 @@ namespace higherLower
       else
       {
         Console.WriteLine("I don't understand.");
-        StartGame();
+        StartGame(firstGame);
+      }
+    }
+
+    static void SelectMode()
+    {
+      Console.WriteLine("Who will be guessing? (me/you)");
+      string modeResponse = Console.ReadLine();
+      if (modeResponse == "you")
+      {
+        Player player = new Player();
+        Gameplay(player);
+      }
+      else if (modeResponse == "me")
+      {
+        Random rnd = new Random();
+        int secretNumber = rnd.Next(1, 101);
+        altGameplay(secretNumber);
+      }
+      else
+      {
+      Console.WriteLine("I don't understand.");
+      SelectMode();
       }
     }
 
@@ -43,29 +71,36 @@ namespace higherLower
       }
       else if (playerResponse == "correct")
       {
-        Console.WriteLine("Nice, thought so. Play again? (yes/no)");
-        string playAgain = Console.ReadLine();
-        if(playAgain == "yes")
-        {
-          player.Reset();
-          Gameplay(player);
-        }
-        else
-        {
-          Console.WriteLine("Fine, peace.");
-          return;
-        }
+        Console.WriteLine("Nice, thought so.");
+        StartGame(false);
       }
-      else
+    }
+
+    static void altGameplay(int secretNumber)
+    {
+      Console.WriteLine("So, what's my number?");
+      string playerGuessString = Console.ReadLine();
+      int playerGuess = int.Parse(playerGuessString);
+      if (playerGuess == secretNumber)
       {
-        Console.WriteLine("I don't understand.");
-        Gameplay(player);
+        Console.WriteLine("Nice, you got it.");
+        StartGame(false);
+      }
+      else if (playerGuess > secretNumber)
+      {
+        Console.WriteLine("My number is lower.");
+        altGameplay(secretNumber);
+      }
+      else if (playerGuess < secretNumber)
+      {
+        Console.WriteLine("My number is higher.");
+        altGameplay(secretNumber);
       }
     }
 
     static void Main()
     {
-      StartGame();
+      StartGame(true);
     }
   }
 }

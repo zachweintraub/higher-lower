@@ -32,6 +32,5 @@ namespace higherLower
       LowerBound = 0;
       UpperBound = 100;
     }
-
   }
 }
